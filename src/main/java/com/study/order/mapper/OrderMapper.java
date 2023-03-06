@@ -29,6 +29,8 @@ public interface OrderMapper {
 
                 Coffee coffee = new Coffee();
                 coffee.setCoffeeId(orderCoffeeDto.getCoffeeId());
+                //커피 id만 set 해줬는데 어떻게 order에서 coffee의 나머지 멤버변수들에게 접근할 수 있지?
+                //주문(ORDERS) 테이블에 주문 정보가 저장될 때, memberId가 외래키로 추가된다는 의미와 같음. 이게 memberId만 있어도 되는 이유
 
                 orderCoffee.setCoffee(coffee);
                 orderCoffee.setOrder(order);
