@@ -2,6 +2,7 @@ package com.study.order.controller;
 
 import com.study.coffee.service.CoffeeService;
 import com.study.order.dto.OrderPatchDto;
+import com.study.order.dto.OrderResponseDto;
 import com.study.response.MultiResponseDto;
 import com.study.response.SingleResponseDto;
 import com.study.order.dto.OrderPostDto;
@@ -59,22 +60,32 @@ public class OrderController {
     @GetMapping("/{order-id}")
     public ResponseEntity getOrder(@PathVariable("order-id") @Positive long orderId) {
         Order order = orderService.findOrder(orderId);
+        
 
         // TODO JPA에 맞춰서 변경 필요
-        // List<Coffee> coffees = coffeeService.findOrderedCoffees(order);
+        //주문한 커피 정보가 ResponseEntity에 포함되도록 변경
+
+        OrderResponseDto orderResponseDto = mapper.orderToOrderResponseDto(order);
+        //List<CoffeeResponseDto> 객체가 orderResponseDto에 포함되어있어서 커피정보 들어가있음. (템플릿에 구성.)
+        
+        // List<Coffee> coffees = coffeeService.findOrderedCoffees(order); 이전에 사용했던것(다대다 매핑 전)
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.orderToOrderResponseDto(order)), HttpStatus.OK);
+                new SingleResponseDto<>(orderResponseDto), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity getOrders(@Positive @RequestParam int page,
+    public ResponseEntity getOrders(@Positive @RequestParam int page, 
                                     @Positive @RequestParam int size) {
         Page<Order> pageOrders = orderService.findOrders(page - 1, size);
         List<Order> orders = pageOrders.getContent();
 
         // TODO JPA에 맞춰서 주문 커피 정보 추가 필요
+        // 주문한 커피 정보 목록이 ResponseEntity에 포함되도록 변경
+        // (아래의 orderResponseDtos 객체에 커피 정보 List<CoffeeResponseDto> 포함.)
+        List<OrderResponseDto> orderResponseDtos = mapper.ordersToOrderResponseDtos(orders);
+
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.ordersToOrderResponseDtos(orders), pageOrders),
+                new MultiResponseDto<>(orderResponseDtos, pageOrders),
                 HttpStatus.OK);
     }
 

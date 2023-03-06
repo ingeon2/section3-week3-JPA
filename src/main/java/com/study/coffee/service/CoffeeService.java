@@ -4,7 +4,6 @@ import com.study.coffee.entity.Coffee;
 import com.study.coffee.repository.CoffeeRepository;
 import com.study.exception.BusinessLogicException;
 import com.study.exception.ExceptionCode;
-import com.study.order.entity.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

@@ -1,12 +1,14 @@
 package com.study.coffee.entity;
 
+import com.study.order.entity.OrderCoffee;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -51,4 +53,16 @@ public class Coffee {
             this.status = status;
         }
     }
+
+
+    //오더커피와의 관계
+    @OneToMany(mappedBy = "coffee", cascade = CascadeType.PERSIST) //맵드바이 보고 여기랑 연관된 클래스에 커피 클래스의 pk인 커피아이디가 잡혀있겠구나! 생각
+    private List<OrderCoffee> orderCoffees = new ArrayList<>();
+    public void setOrderCoffee(OrderCoffee orderCoffee) {
+        orderCoffees.add(orderCoffee);
+        if(orderCoffee.getCoffee() != this) {
+            orderCoffee.setCoffee(this);
+        }
+    }
+    
 }

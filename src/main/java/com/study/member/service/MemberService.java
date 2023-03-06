@@ -4,6 +4,7 @@ import com.study.exception.BusinessLogicException;
 import com.study.exception.ExceptionCode;
 import com.study.member.entity.Member;
 import com.study.member.repository.MemberRepository;
+import com.study.stamp.entity.Stamp;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,9 +25,13 @@ public class MemberService {
 
     //여기는 서비스로직
     public Member createMember(Member member) {
-        verifyExistsEmail(member.getEmail()); //여기 겟셋은 롬복 애너테이션으로
-
+        verifyExistsEmail(member.getEmail()); //여기 겟셋은 롬복 애너테이션으로, 등록된 이메일인지 확인
+        initStamp(member); //저장할 매개변수 멤버의 스탬프 초기화
         return memberRepository.save(member); //여기 save는 구현한게 아니라 자동으로 jpa리파지토리 인터페이스에서 가져오는것
+    }
+    private static void initStamp(Member member) { //스탬프 초기화 매서드
+        Stamp stamp = new Stamp();
+        stamp.setMember(member);
     }
 
     public Member updateMember(Member member) {

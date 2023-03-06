@@ -1,10 +1,10 @@
 package com.study.member.entity;
 
 import com.study.order.entity.Order;
+import com.study.stamp.entity.Stamp;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -54,6 +54,18 @@ public class Member {
     @Column(nullable = false, name = "LAST_MODIFIED_AT")
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
+
+
+
     @OneToMany(mappedBy = "member") //일대 다 매핑, 멤버 엔티티와의 소통창구
     private List<Order> orders = new ArrayList<>();
+
+    @OneToOne(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}) //캐스캐이드는 같이 살고 같이 죽는다 이런느낌
+    private Stamp stamp;
+    public void setStamp(Stamp stamp) {
+        this.stamp = stamp;
+        if(stamp.getMember()!= this){
+            stamp.setMember(this);
+        }
+    }
 }
